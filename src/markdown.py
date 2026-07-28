@@ -3,8 +3,8 @@ from textnode import TextNode, TextType
 
 
 def split_nodes_delimiter(
-        old_nodes: list[TextNode], 
-        delimiter: str, 
+        old_nodes: list[TextNode],
+        delimiter: str,
         text_type: TextType
     ) -> list[TextNode]:
     new_nodes = []
@@ -37,7 +37,14 @@ def extract_markdown_links(text: str) -> list[tuple]:
     return matches
 
 def split_nodes_image(old_nodes: list[TextNode]) -> list[TextNode]:
-    pass
+    new_nodes = []
+    for node in old_nodes:
+        extracted_images = extract_markdown_images(node.text)
+        i = 0
+        while i < len(extracted_images):
+            #complete this
+
+
 
 def split_nodes_link(old_nodes: list[TextNode]) -> list[TextNode]:
     pass
