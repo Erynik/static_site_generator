@@ -15,8 +15,8 @@ class HTMLNode:
             return ""
         result = []
         for prop, val in self.props.items():
-            result.append(f'{prop}="{val}"')
-        final = " ".join(result)
+            result.append(f' {prop}="{val}"')
+        final = "".join(result)
         return final
     
     def __repr__(self):
