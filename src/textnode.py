@@ -8,6 +8,7 @@ class TextType(Enum):
     CODE = "code"
     LINK = "link"
     IMAGE = "image"
+    FANCY = "fancy"
 
 class TextNode:
     def __init__(self, text: str, text_type: TextType, url: str | None = None) -> None:
@@ -40,8 +41,8 @@ def text_node_to_html_node(text_node: TextNode) -> LeafNode:
                 "src": text_node.url,
                 "alt": text_node.text
             })
-        case default:
-            raise Exception
+        case _:
+            raise Exception("Not a valid TextType")
 
 
     

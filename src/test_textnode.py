@@ -41,5 +41,30 @@ class TestTextNode(unittest.TestCase):
         self.assertEqual(html_node.value, "")
         self.assertEqual(html_node.props_to_html(), " src=\"www.fakeimage.com/img1.jpg\" alt=\"alt text\"")
 
+    def test_text_bold(self):
+        node = TextNode("this is a bold text", TextType.BOLD)
+        html_node = text_node_to_html_node(node)
+        self.assertEqual(html_node.tag, "b")
+        self.assertEqual(html_node.value, "this is a bold text")
+
+    def test_text_italic(self):
+        node = TextNode("this is an italic text", TextType.ITALIC)
+        html_node = text_node_to_html_node(node)
+        self.assertEqual(html_node.tag, "i")
+        self.assertEqual(html_node.value, "this is an italic text")
+
+    def test_text_code(self):
+        node = TextNode("this is a code text", TextType.CODE)
+        html_node = text_node_to_html_node(node)
+        self.assertEqual(html_node.tag, "code")
+        self.assertEqual(html_node.value, "this is a code text")
+
+    def test_text_none(self):
+        node = TextNode("this is an invalid text", TextType.FANCY)
+        with self.assertRaises(Exception):
+            text_node_to_html_node(node)
+        
+
+
 if __name__ == "__main__":
     unittest.main()
