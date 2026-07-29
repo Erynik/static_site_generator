@@ -97,3 +97,7 @@ class TestTextNode(unittest.TestCase):
         child_nodes = [ParentNode("a", [ParentNode("b", [ParentNode("c", [LeafNode("d", "child")])])])]
         parent_node = ParentNode("h1", child_nodes)
         self.assertEqual(parent_node.to_html(), "<h1><a><b><c><d>child</d></c></b></a></h1>")
+
+
+if __name__ == "__main__":
+    unittest.main()

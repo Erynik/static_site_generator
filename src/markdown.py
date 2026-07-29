@@ -33,9 +33,11 @@ def extract_markdown_images(text: str) -> list[tuple]:
     matches = re.findall(r"!\[(.*?)\]\((.*?)\)", text)
     return matches
 
+
 def extract_markdown_links(text: str) -> list[tuple]:
     matches = re.findall(r"(?<!!)\[(.*?)\]\((.*?)\)", text)
     return matches
+
 
 def split_nodes_image(old_nodes: list[TextNode]) -> list[TextNode]:
     new_nodes = []
@@ -56,7 +58,6 @@ def split_nodes_image(old_nodes: list[TextNode]) -> list[TextNode]:
     return new_nodes
 
 
-
 def split_nodes_link(old_nodes: list[TextNode]) -> list[TextNode]:
     new_nodes = []
     for node in old_nodes:
@@ -75,6 +76,7 @@ def split_nodes_link(old_nodes: list[TextNode]) -> list[TextNode]:
             new_nodes.append(TextNode(text_to_split, TextType.TEXT))
     return new_nodes
 
+
 def text_to_textnodes(text):
     bold_split = split_nodes_delimiter([TextNode(text, TextType.TEXT)],"**", TextType.BOLD)
     italic_split = split_nodes_delimiter(bold_split, "_", TextType.ITALIC)
@@ -83,3 +85,17 @@ def text_to_textnodes(text):
     link_split = split_nodes_link(image_split)
     final_nodes = link_split
     return final_nodes
+
+
+def markdown_to_blocks(markdown):
+    new_blocks = markdown.split("\n\n")
+    final_blocks = []
+    for block in new_blocks:
+        if block == "":
+            continue
+        stripped_block = block.strip()
+        final_blocks.append(stripped_block)
+    return final_blocks
+            
+
+        
