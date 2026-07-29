@@ -97,6 +97,34 @@ class TestMarkDown(unittest.TestCase):
             new_nodes,
         )
 
+    def test_split_images_immediate_mixed(self):
+        node = TextNode(
+            "![immediate image](imgur.com/jpg.jpg) followed by a [link](www.google.com) and then some other text",
+            TextType.TEXT
+        )
+        new_nodes = split_nodes_image([node])
+        self.assertEqual(
+            [
+                TextNode("immediate image", TextType.IMAGE, "imgur.com/jpg.jpg"),
+                TextNode(" followed by a [link](www.google.com) and then some other text", TextType.TEXT)
+            ],
+            new_nodes
+        )
+
+    def test_split_images_mixed(self):
+        node = TextNode(
+            "![immediate image](imgur.com/jpg.jpg) followed by a [link](www.google.com) and then some other text",
+            TextType.TEXT
+        )
+        new_nodes = split_nodes_link([node])
+        self.assertEqual(
+            [
+                TextNode("![immediate image](imgur.com/jpg.jpg) followed by a ", TextType.TEXT),
+                TextNode("link", TextType.LINK, "www.google.com"),
+                TextNode(" and then some other text", TextType.TEXT)
+            ],
+            new_nodes
+        )
 
 if __name__ == "__main__":
     unittest.main()
