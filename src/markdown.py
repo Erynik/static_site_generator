@@ -1,5 +1,8 @@
 import re
+from htmlnode import HTMLNode, LeafNode, ParentNode
 from textnode import TextNode, TextType
+from block import block_to_block_type, BlockType
+from textnode import text_node_to_html_node
 
 
 def split_nodes_delimiter(
@@ -97,5 +100,56 @@ def markdown_to_blocks(markdown):
         final_blocks.append(stripped_block)
     return final_blocks
             
+def text_to_children(text):
+    #takes in string of text, returns list of HTMLNodes for the inline markdown
+    #uses text_to_textnodes, followed by textnode_to_htmlnode
+    new_text_nodes = text_to_textnodes(text)
+    new_children = []
+    for node in new_text_nodes:
+        child = text_node_to_html_node(node)
+        new_children.append(child)
+    return new_children
 
-        
+def markdown_to_html_node(markdown):
+    #split markdown into blocks
+    blocks = markdown_to_blocks(markdown)
+    #loop over each block
+    new_nodes = []
+    for block in blocks:
+        #determine block type
+        block_type = block_to_block_type(block)
+        #create HTMLNode based on blocktype
+        match block_type:
+            case BlockType.PARAGRAPH:
+                paragraph = block.replace("\n", " ")
+                para_node = ParentNode(tag = 'p', children = text_to_children(paragraph))
+                new_nodes.append(para_node)
+            case BlockType.CODE:
+                code = TextNode(block.strip("```").lstrip("\n"), TextType.TEXT) 
+                text_node = text_node_to_html_node(code)
+                code_node = ParentNode(tag = 'code', children = [text_node])
+                pre_code_node = ParentNode(tag = 'pre', children = [code_node])
+                new_nodes.append(pre_code_node)      
+            case BlockType.QUOTE:
+                quote_lines = block.split("\n")
+                quote_lines_trimmed = []
+                for line in quote_lines:
+                    new_line = line.strip("> ")
+                    quote_lines_trimmed.append(new_line)
+                quote_text = " ".join(quote_lines_trimmed)
+                quote_node = ParentNode(tag = 'blockquote', children = text_to_children(quote_text))
+                new_nodes.append(quote_node)
+            case BlockType.UNORDERED:
+                list_lines = block.split("\n")
+                line_nodes = []
+                for line in list_lines:
+                    trimmed_line = line[2:]
+                    line_node = ParentNode(tag="li", children=text_to_children(trimmed_line))
+                    line_nodes.append(line_node)
+                list_node = ParentNode(tag="ul", children=line_nodes)
+                new_nodes.append(list_node)
+                        
+
+    #outside of block loop. adds all above nodes to parent HTMLNode for the page.
+    parent_node = ParentNode(tag = 'div', children = new_nodes)
+    return parent_node
