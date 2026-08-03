@@ -148,7 +148,24 @@ def markdown_to_html_node(markdown):
                     line_nodes.append(line_node)
                 list_node = ParentNode(tag="ul", children=line_nodes)
                 new_nodes.append(list_node)
-                        
+            case BlockType.ORDERED:
+                list_lines = block.split("\n")
+                line_nodes = []
+                for line in list_lines:
+                    index_dot = line.find('.')
+                    trimmed_line = line[index_dot+2:]
+                    line_node = ParentNode(tag="li", children=text_to_children(trimmed_line))
+                    line_nodes.append(line_node)
+                list_node = ParentNode(tag="ol", children=line_nodes)
+                new_nodes.append(list_node)         
+
+            case BlockType.HEADING:
+                heading_text = block.strip("# ")
+                heading_count: int = block[:7].count('#')
+                tag_constructed = f"h{heading_count}"
+                heading_node = ParentNode(tag=tag_constructed, children=text_to_children(heading_text))
+                new_nodes.append(heading_node)
+
 
     #outside of block loop. adds all above nodes to parent HTMLNode for the page.
     parent_node = ParentNode(tag = 'div', children = new_nodes)
