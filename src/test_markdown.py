@@ -1,5 +1,5 @@
 import unittest
-from markdown_code import split_nodes_delimiter, extract_markdown_images, extract_markdown_links, split_nodes_image, split_nodes_link, text_to_textnodes, markdown_to_blocks, markdown_to_html_node
+from markdown_code import split_nodes_delimiter, extract_markdown_images, extract_markdown_links, split_nodes_image, split_nodes_link, text_to_textnodes, markdown_to_blocks, markdown_to_html_node, extract_title
 from textnode import TextNode, TextType
 
 class TestMarkDown(unittest.TestCase):
@@ -368,6 +368,37 @@ the **same** even & with >inline stuff
             html,
             "<div><h6>This is a <b>BOLD</b> heading</h6></div>"
         )
+
+    def test_extract_heading(self):
+        md="# This is the Header\n\nThis is not the header"
+        title = extract_title(md)
+        self.assertEqual(
+            title,
+            "This is the Header"
+        )
+
+    def test_no_header(self):
+        md=""
+        with self.assertRaises(Exception):
+            extract_title(md)
+
+    def test_h2_header(self):
+        md="## not the header you are looking for"
+        with self.assertRaises(Exception):
+            extract_title(md)
+
+    def test_malformed_h1(self):
+        md="#crappy header"
+        with self.assertRaises(Exception):
+            extract_title(md)
+        
+    def test_single_line_header(self):
+        md="# Hello"
+        title = extract_title(md)
+        self.assertEqual(
+                title,
+                "Hello"
+            )
 
 if __name__ == "__main__":
     unittest.main()

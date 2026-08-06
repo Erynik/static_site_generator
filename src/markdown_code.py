@@ -170,3 +170,13 @@ def markdown_to_html_node(markdown):
     #outside of block loop. adds all above nodes to parent HTMLNode for the page.
     parent_node = ParentNode(tag = 'div', children = new_nodes)
     return parent_node
+
+def extract_title(markdown):
+    header_pattern = r"(?<!#)(#{1} )(.*?)(?:$|\n)"
+    header_text = re.search(header_pattern, markdown)
+    if header_text:
+        result = header_text.group(2).strip()
+        return result
+    else:
+        raise Exception("No Header Found")
+    
