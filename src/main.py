@@ -1,8 +1,15 @@
-from textnode import TextNode
+import os
+import shutil
+
+from copy_static import copy_static_tree
+
+dir_path_static = "./static"
+dir_path_public = "./public"
 
 def main():
-    Node_1 = TextNode("Dummy Text", "link", "www.google.co.uk")
-    print(Node_1)
+    copy_static_tree(dir_path_static, dir_path_public)
+
+    
 
 
 main()
