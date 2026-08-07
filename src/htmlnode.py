@@ -9,7 +9,7 @@ class HTMLNode:
 
     def to_html(self):
         raise NotImplementedError
-    
+
     def props_to_html(self):
         if not self.props:
             return ""
@@ -18,7 +18,7 @@ class HTMLNode:
             result.append(f' {prop}="{val}"')
         final = "".join(result)
         return final
-    
+
     def __repr__(self):
         return f"HTMLNode({self.tag}, {self.value}, {self.children}, {self.props})"
 
@@ -28,13 +28,13 @@ class LeafNode(HTMLNode):
 
     def to_html(self):
         if not self.value:
-            raise ValueError(f"LeafNode must have a value.")
+            raise ValueError("LeafNode must have a value.")
         if not self.tag:
             return f"{self.value}"
         else:
             props = self.props_to_html()
             return f"<{self.tag}{props}>{self.value}</{self.tag}>"
-        
+
     def __repr__(self):
         return f"LeafNode({self.tag}, {self.value}, {self.props})"
 
